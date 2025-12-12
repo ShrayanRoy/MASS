@@ -348,9 +348,18 @@ theta.ml <-
                               it, signif(t0)), domain = NA)
     while((it <- it + 1) < limit && abs(del) > eps) {
         t0 <- abs(t0)
-        del <- score(n, t0, mu, y, weights)/(i <- info(n, t0, mu, y, weights))
-        t0 <- t0 + del
-        if(trace) message("theta.ml: iter", it," theta =", signif(t0))
+		score_it <- score(n, t0, mu, y, weights)
+		info_it <- info(n, t0, mu, y, weights)
+		if(info_it != 0){
+          del <- score_it/info_it
+		  t0 <- t0 + del
+          if(trace) message("theta.ml: iter", it," theta =", signif(t0))
+		}else{
+		  print("Observed fisher information is equal to zero, stopped theta update.")	
+		  t0 <- .Machine$double.xmax
+		  info_it <- 0	
+		  break	
+		}	
     }
     if(t0 < 0) {
         t0 <- 0
@@ -361,7 +370,7 @@ theta.ml <-
         warning("iteration limit reached")
         attr(t0, "warn") <- gettext("iteration limit reached")
     }
-    attr(t0, "SE") <- sqrt(1/i)
+    attr(t0, "SE") <- ifelse(info_it != 0,sqrt(1/abs(i),"Undefined :: Poisson case")
     t0
 }
 
