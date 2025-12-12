@@ -300,7 +300,7 @@ glm.nb2 <- function(formula, data, weights,
       fit$null.deviance <- null.deviance
     }
 
-    class(fit) <- c("pois", "glm", "lm")
+    #class(fit) <- c("pois", "glm", "lm")
     fit$terms <- Terms
     fit$formula <- as.vector(attr(Terms, "formula"))
     ## make result somewhat reproducible
