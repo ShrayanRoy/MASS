@@ -300,6 +300,7 @@ glm.nb2 <- function(formula, data, weights,
       fit$null.deviance <- null.deviance
     }
 
+    class(fit) <- c("pois", "glm", "lm")
     fit$terms <- Terms
     fit$formula <- as.vector(attr(Terms, "formula"))
     ## make result somewhat reproducible
@@ -309,8 +310,8 @@ glm.nb2 <- function(formula, data, weights,
     fit$na.action <- attr(mf, "na.action")
     if(x) fit$x <- X
     if(!y) fit$y <- NULL
-    fit$theta <- as.vector(th)
-    fit$SE.theta <- attr(th, "SE")
+    fit$theta <- Inf  
+    fit$SE.theta <- "Undefined"
     fit$twologlik <- as.vector(2 * Lm)
     fit$aic <- -fit$twologlik + 2*fit$rank + 2
     fit$contrasts <- attr(X, "contrasts")
